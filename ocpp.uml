@@ -19,13 +19,13 @@
           <transition xmi:type="uml:Transition" xmi:id="_FG1LALC5Ee-2sqvv3BjQYQ" name="Initial" source="_FGM44LC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_9hLLwLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Transitioning to WaitingForBootNotification&quot;);</body>
+              <body>log.log(&quot;[CSMS] Waiting for boot notifications&quot;);</body>
             </effect>
           </transition>
           <transition xmi:type="uml:Transition" xmi:id="_S8LKMLC5Ee-2sqvv3BjQYQ" name="notified" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_QzzIcLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_eTeZoLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Received BootNotificationRequest&quot;);
+              <body>log.log(&quot;[CSMS] Recevied BootNotification from station %s with reason %s&quot;, station, reason);
 
 log.log(&quot;[CSMS] Transitioning to Operational&quot;);
 
@@ -55,12 +55,12 @@ if(statusNotificationPort.response().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_jnRpALDOEe-2sqvv3BjQYQ" name="receivedHeartbeat" kind="external" source="_iVruALC9Ee-2sqvv3BjQYQ" target="_iVruALC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_zmL8wLDOEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Received HeartbeatRequest.&quot;);
+              <body>//log.log(&quot;[CSMS] Received HeartbeatRequest.&quot;);
 
 if(heartbeatPort.response().send()) {
-	log.log(&quot;[CSMS] Sent HeartbeatResponse&quot;);
+//	log.log(&quot;[CSMS] Sent HeartbeatResponse&quot;);
 } else {
-	log.log(&quot;[CSMS] Failed to send HeartbeatResponse&quot;);
+//	log.log(&quot;[CSMS] Failed to send HeartbeatResponse&quot;);
 }</body>
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_vkQ_cLDOEe-2sqvv3BjQYQ" event="_1WLJILDNEe-2sqvv3BjQYQ" port="_5f4JcLDNEe-2sqvv3BjQYQ"/>
@@ -79,29 +79,36 @@ if(heartbeatPort.response().send()) {
       </ownedAttribute>
       <ownedAttribute xmi:type="uml:Port" xmi:id="_4Ax98LC8Ee-2sqvv3BjQYQ" name="statusNotificationPort" visibility="public" type="_iRHMgLC8Ee-2sqvv3BjQYQ" isOrdered="true" aggregation="composite" isBehavior="true" isService="true"/>
       <ownedAttribute xmi:type="uml:Port" xmi:id="_7WLjwLDNEe-2sqvv3BjQYQ" name="heartbeatPort" visibility="public" type="_zQRMkLDNEe-2sqvv3BjQYQ" isOrdered="true" aggregation="composite" isBehavior="true" isService="true"/>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_CTupELDsEe-1jocC-5Xbcw" name="name">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_lhzgYLDsEe-0-64pWyWjAQ" name="name" value="station1"/>
+      </ownedAttribute>
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_RKe5MLCwEe-GfNfxoFH-hg" name="StateMachine" isReentrant="false">
         <region xmi:type="uml:Region" xmi:id="_RKoqMLCwEe-GfNfxoFH-hg" name="Region">
           <transition xmi:type="uml:Transition" xmi:id="_RK2soLCwEe-GfNfxoFH-hg" name="Initial" source="_RKsUkLCwEe-GfNfxoFH-hg" target="_RKx0ILCwEe-GfNfxoFH-hg">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_Mrt1kLC1Ee-GfNfxoFH-hg" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[ChSt] Transitioning to Booting.&quot;);
+              <body>log.log(&quot;[STAT] Station %s starting to boot...&quot;, name);
 
-if (bootNotificationPort.request().send()) {
-  log.log(&quot;[ChSt] Sent BootRequest&quot;);
+char reason[] = &quot;PowerUp&quot;;
+
+if (bootNotificationPort.request(reason, name).send()) {
+    log.log(&quot;[STAT] Sent BootRequest&quot;);
 } else {
-  log.log(&quot;[ChSt] Error sending BootRequest&quot;);
-} </body>
+    log.log(&quot;[STAT] Error sending BootRequest&quot;);
+}
+</body>
             </effect>
           </transition>
           <transition xmi:type="uml:Transition" xmi:id="_nff5wLC4Ee-2sqvv3BjQYQ" name="booted" kind="external" source="_RKx0ILCwEe-GfNfxoFH-hg" target="_8c6BcLCwEe-GfNfxoFH-hg">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_r0HwoLC4Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>    log.log(&quot;[ChSt] Transitioning to RegisteringControllers.&quot;);
-    if (statusNotificationPort.request().send()) {
-    log.log(&quot;[ChSt] Sent StatusNotificationRequest&quot;);
-    } else {
-    log.log(&quot;[ChSt] Error sending StatusNotificationRequest&quot;);
-    } 
+              <body>log.log(&quot;[STAT] Transitioning to RegisteringControllers.&quot;);
+if (statusNotificationPort.request().send()) {
+    log.log(&quot;[STAT] Sent StatusNotificationRequest&quot;);
+} else {
+    log.log(&quot;[STAT] Error sending StatusNotificationRequest&quot;);
+} 
 </body>
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_vi-A8LC4Ee-2sqvv3BjQYQ" event="_2rOr0LCyEe-GfNfxoFH-hg" port="_wscHQLC0Ee-GfNfxoFH-hg"/>
@@ -109,12 +116,11 @@ if (bootNotificationPort.request().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_G7aKMLC9Ee-2sqvv3BjQYQ" name="ready" kind="external" source="_8c6BcLCwEe-GfNfxoFH-hg" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_MMNVcLC9Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[ChSt] Transitioning to Operating&quot;);
-
+              <body>log.log(&quot;[STAT] Transitioning to Operating&quot;);
 if (heartbeatPort.request().send()) {
-	log.log(&quot;[ChSt] Sent HeartBeat&quot;);
+    log.log(&quot;[STAT] Sent HeartBeat&quot;);
 } else {
-	log.log(&quot;[ChSt] Error sending Heartbeat&quot;);
+    log.log(&quot;[STAT] Error sending Heartbeat&quot;);
 } 
 </body>
             </effect>
@@ -123,13 +129,13 @@ if (heartbeatPort.request().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_1jHX8LDYEe-2sqvv3BjQYQ" name="sendHeartbeat" kind="external" source="_FQNMoLC9Ee-2sqvv3BjQYQ" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_7KIq0LDYEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;Received HeartbeatResponse&quot;);
-
+              <body>//log.log(&quot;[STAT] Received HeartbeatResponse&quot;);
 if (heartbeatPort.request().send()) {
-	log.log(&quot;[ChSt] Sent HeartBeat&quot;);
+//    log.log(&quot;[STAT] Sent HeartBeat&quot;);
 } else {
-	log.log(&quot;[ChSt] Error sending Heartbeat&quot;);
-}</body>
+//    log.log(&quot;[STAT] Error sending Heartbeat&quot;);
+}
+</body>
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_eL5SgLDbEe-i6vTFlLE7Wg" event="_2E7skLDNEe-2sqvv3BjQYQ" port="_7WLjwLDNEe-2sqvv3BjQYQ"/>
           </transition>
@@ -149,7 +155,14 @@ if (heartbeatPort.request().send()) {
         <ownedOperation xmi:type="uml:Operation" xmi:id="_2rJMQLCyEe-GfNfxoFH-hg" name="response"/>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_ML3YMLCyEe-GfNfxoFH-hg" name="BootNotification~">
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_4LbTQLCyEe-GfNfxoFH-hg" name="request"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_4LbTQLCyEe-GfNfxoFH-hg" name="request">
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_rDRGMLDeEe-uobIgqqfybQ" name="reason">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_yJp6ELDeEe-uobIgqqfybQ" name="station">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedParameter>
+        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Usage" xmi:id="_ML6bgLCyEe-GfNfxoFH-hg" client="_MLousLCyEe-GfNfxoFH-hg" supplier="_ML3YMLCyEe-GfNfxoFH-hg"/>
       <packagedElement xmi:type="uml:AnyReceiveEvent" xmi:id="_ML7CkLCyEe-GfNfxoFH-hg" name="*"/>
