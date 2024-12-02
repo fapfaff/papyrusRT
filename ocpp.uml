@@ -123,8 +123,15 @@ if (heartbeatPort.request().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_1jHX8LDYEe-2sqvv3BjQYQ" name="sendHeartbeat" kind="external" source="_FQNMoLC9Ee-2sqvv3BjQYQ" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_7KIq0LDYEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;Received HeartbeatResponse&quot;);</body>
+              <body>log.log(&quot;Received HeartbeatResponse&quot;);
+
+if (heartbeatPort.request().send()) {
+	log.log(&quot;[ChSt] Sent HeartBeat&quot;);
+} else {
+	log.log(&quot;[ChSt] Error sending Heartbeat&quot;);
+}</body>
             </effect>
+            <trigger xmi:type="uml:Trigger" xmi:id="_eL5SgLDbEe-i6vTFlLE7Wg" event="_2E7skLDNEe-2sqvv3BjQYQ" port="_7WLjwLDNEe-2sqvv3BjQYQ"/>
           </transition>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_RKsUkLCwEe-GfNfxoFH-hg" kind="initial"/>
           <subvertex xmi:type="uml:State" xmi:id="_RKx0ILCwEe-GfNfxoFH-hg" name="Booting"/>
