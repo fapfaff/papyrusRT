@@ -56,9 +56,11 @@ if(bootNotificationPort.response(Accepted, currentTime, 1000).send()) {
           <transition xmi:type="uml:Transition" xmi:id="_k0FqILC9Ee-2sqvv3BjQYQ" name="ready" kind="external" source="_QzzIcLC5Ee-2sqvv3BjQYQ" target="_iVruALC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_rbbKgLC9Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Received StatusNotificationRequest&quot;);
-
-log.log(&quot;[CSMS] Transitioning to Operational.&quot;);
+              <body>if (connectorStatus == Available) {
+   log.log(&quot;[CSMS] Connector is available.&quot;);
+} else {
+   log.log(&quot;[CSMS] Connector is not available.&quot;);
+}
 
 if(statusNotificationPort.response().send()) {
 	log.log(&quot;[CSMS] Sent StatusNotificationResponse&quot;);
@@ -132,7 +134,7 @@ if (bootNotificationPort.request(reason, name).send()) {
 log.log(&quot;[STAT] Setting heartbeat interval to %d&quot;, interval);
 heartbeatInterval = interval;
 
-if (statusNotificationPort.request().send()) {
+if (statusNotificationPort.request(Available).send()) {
     log.log(&quot;[STAT] Sent StatusNotificationRequest&quot;);
 } else {
     log.log(&quot;[STAT] Error sending StatusNotificationRequest&quot;);
@@ -144,7 +146,7 @@ if (statusNotificationPort.request().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_G7aKMLC9Ee-2sqvv3BjQYQ" name="ready" kind="external" source="_8c6BcLCwEe-GfNfxoFH-hg" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_MMNVcLC9Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[STAT] Transitioning to Operating&quot;);
+              <body>
 if (heartbeatPort.request().send()) {
     log.log(&quot;[STAT] Sent HeartBeat&quot;);
 } else {
@@ -216,7 +218,9 @@ if (heartbeatPort.request().send()) {
         <ownedOperation xmi:type="uml:Operation" xmi:id="_ojsk4LC8Ee-2sqvv3BjQYQ" name="response"/>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_iRdKwLC8Ee-2sqvv3BjQYQ" name="StatusNotification~">
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_nKD4cLC8Ee-2sqvv3BjQYQ" name="request"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_nKD4cLC8Ee-2sqvv3BjQYQ" name="request">
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_PERfMLDzEe-uWvnqfiB0XQ" name="connectorStatus" type="_Cyb6ILDzEe-uWvnqfiB0XQ"/>
+        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Usage" xmi:id="_iRfnALC8Ee-2sqvv3BjQYQ" client="_iRHMgLC8Ee-2sqvv3BjQYQ" supplier="_iRdKwLC8Ee-2sqvv3BjQYQ"/>
       <packagedElement xmi:type="uml:AnyReceiveEvent" xmi:id="_iRgOELC8Ee-2sqvv3BjQYQ" name="*"/>
@@ -247,6 +251,12 @@ if (heartbeatPort.request().send()) {
       <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_YyvXULDtEe-Sera3s5tdng" name="Accepted"/>
       <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_76e1wLDwEe-9M8IF0dWpAQ" name="Pending"/>
       <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_8e-p8LDwEe-9M8IF0dWpAQ" name="Rejected"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Enumeration" xmi:id="_Cyb6ILDzEe-uWvnqfiB0XQ" name="ConnectorStatus">
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_IvfucLDzEe-uWvnqfiB0XQ" name="Available"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_FrqxELDzEe-uWvnqfiB0XQ" name="Unavailable"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_GTlssLDzEe-uWvnqfiB0XQ" name="Reserved"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_G06RELDzEe-uWvnqfiB0XQ" name="Faulted"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_M0vIU7CtEe-GfNfxoFH-hg">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_M0vIVLCtEe-GfNfxoFH-hg" source="http://www.eclipse.org/uml2/2.0.0/UML">
