@@ -7,6 +7,22 @@
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uf5JoLDUEe-2sqvv3BjQYQ" source="UMLRT_Default_top">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_uf5wsLDUEe-2sqvv3BjQYQ" key="top_name" value="Top"/>
     </eAnnotations>
+    <packagedElement xmi:type="uml:Class" xmi:id="_iLUcoLCzEe-GfNfxoFH-hg" name="Top" isActive="true">
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_kfvWULCzEe-GfNfxoFH-hg" name="cSMS" visibility="protected" type="_qAXVALCtEe-GfNfxoFH-hg" isOrdered="true" aggregation="composite"/>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_lrwdgLCzEe-GfNfxoFH-hg" name="chargingStation" visibility="protected" type="_sRGokLCtEe-GfNfxoFH-hg" isOrdered="true" aggregation="composite"/>
+      <ownedConnector xmi:type="uml:Connector" xmi:id="_BrwgYLC7Ee-2sqvv3BjQYQ" name="RTConnector1">
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_Br0x0LC7Ee-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_CcU-gLC3Ee-GfNfxoFH-hg"/>
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_Br1Y4LC7Ee-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_wscHQLC0Ee-GfNfxoFH-hg"/>
+      </ownedConnector>
+      <ownedConnector xmi:type="uml:Connector" xmi:id="_OkM30LDOEe-2sqvv3BjQYQ" name="RTConnector2">
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_OkPUELDOEe-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_08zPkLC8Ee-2sqvv3BjQYQ"/>
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_OkP7ILDOEe-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_4Ax98LC8Ee-2sqvv3BjQYQ"/>
+      </ownedConnector>
+      <ownedConnector xmi:type="uml:Connector" xmi:id="_PMPIMLDOEe-2sqvv3BjQYQ" name="RTConnector3">
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_PMQWULDOEe-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_5f4JcLDNEe-2sqvv3BjQYQ"/>
+        <end xmi:type="uml:ConnectorEnd" xmi:id="_PMQWUbDOEe-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_7WLjwLDNEe-2sqvv3BjQYQ"/>
+      </ownedConnector>
+    </packagedElement>
     <packagedElement xmi:type="uml:Class" xmi:id="_qAXVALCtEe-GfNfxoFH-hg" name="CSMS" classifierBehavior="_FFGssLC5Ee-2sqvv3BjQYQ" isActive="true">
       <ownedAttribute xmi:type="uml:Port" xmi:id="_7sKkMLC0Ee-GfNfxoFH-hg" name="log" visibility="protected" isOrdered="true" aggregation="composite" isBehavior="true" isService="false">
         <type xmi:type="uml:Collaboration" href="pathmap://UMLRTRTSLIB/UMLRT-RTS.uml#_6kIb0IeXEeSVyrlWP4nYew"/>
@@ -19,17 +35,17 @@
           <transition xmi:type="uml:Transition" xmi:id="_FG1LALC5Ee-2sqvv3BjQYQ" name="Initial" source="_FGM44LC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_9hLLwLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Waiting for boot notifications&quot;);</body>
+              <body>log.log(&quot;[CSMS] Waiting for boot notifications...&quot;);</body>
             </effect>
           </transition>
           <transition xmi:type="uml:Transition" xmi:id="_S8LKMLC5Ee-2sqvv3BjQYQ" name="notified" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_QzzIcLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_eTeZoLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[CSMS] Recevied BootNotification from station %s with reason %s&quot;, station, reason);
+              <body>log.log(&quot;[CSMS] Recieved BootNotification from station %s with reason %s&quot;, station, reason);
 
-log.log(&quot;[CSMS] Transitioning to Operational&quot;);
+int currentTime = time(NULL);
 
-if(bootNotificationPort.response().send()) {
+if(bootNotificationPort.response(Accepted, currentTime, 1000).send()) {
 	log.log(&quot;[CSMS] Sent BootNotificationResponse&quot;);
 } else {
 	log.log(&quot;[CSMS] Failed to send BootNotificationResponse&quot;);
@@ -83,6 +99,10 @@ if(heartbeatPort.response().send()) {
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
         <defaultValue xmi:type="uml:LiteralString" xmi:id="_lhzgYLDsEe-0-64pWyWjAQ" name="name" value="station1"/>
       </ownedAttribute>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_ajQ88LDxEe-9M8IF0dWpAQ" name="heartbeatInterval">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_ajQ88bDxEe-9M8IF0dWpAQ" value="1000"/>
+      </ownedAttribute>
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_RKe5MLCwEe-GfNfxoFH-hg" name="StateMachine" isReentrant="false">
         <region xmi:type="uml:Region" xmi:id="_RKoqMLCwEe-GfNfxoFH-hg" name="Region">
           <transition xmi:type="uml:Transition" xmi:id="_RK2soLCwEe-GfNfxoFH-hg" name="Initial" source="_RKsUkLCwEe-GfNfxoFH-hg" target="_RKx0ILCwEe-GfNfxoFH-hg">
@@ -103,7 +123,15 @@ if (bootNotificationPort.request(reason, name).send()) {
           <transition xmi:type="uml:Transition" xmi:id="_nff5wLC4Ee-2sqvv3BjQYQ" name="booted" kind="external" source="_RKx0ILCwEe-GfNfxoFH-hg" target="_8c6BcLCwEe-GfNfxoFH-hg">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_r0HwoLC4Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>log.log(&quot;[STAT] Transitioning to RegisteringControllers.&quot;);
+              <body>if (status == Accepted) {
+    log.log(&quot;[STAT] Boot accepted at %d.&quot;, currentTime);
+} else {
+    log.log(&quot;[STAT] Boot not accepted.&quot;);
+}
+
+log.log(&quot;[STAT] Setting heartbeat interval to %d&quot;, interval);
+heartbeatInterval = interval;
+
 if (statusNotificationPort.request().send()) {
     log.log(&quot;[STAT] Sent StatusNotificationRequest&quot;);
 } else {
@@ -152,7 +180,15 @@ if (heartbeatPort.request().send()) {
         <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_ML_UALCyEe-GfNfxoFH-hg" client="_MLousLCyEe-GfNfxoFH-hg" supplier="_ML7poLCyEe-GfNfxoFH-hg" contract="_ML7poLCyEe-GfNfxoFH-hg"/>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_MLyfsLCyEe-GfNfxoFH-hg" name="BootNotification">
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_2rJMQLCyEe-GfNfxoFH-hg" name="response"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_2rJMQLCyEe-GfNfxoFH-hg" name="response">
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_Rx6Y4LDtEe-Sera3s5tdng" name="status" type="_ShyWoLDtEe-Sera3s5tdng"/>
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_mqHW0LDtEe-Sera3s5tdng" name="currentTime">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          </ownedParameter>
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_sJE54LDtEe-Sera3s5tdng" name="interval">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          </ownedParameter>
+        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_ML3YMLCyEe-GfNfxoFH-hg" name="BootNotification~">
         <ownedOperation xmi:type="uml:Operation" xmi:id="_4LbTQLCyEe-GfNfxoFH-hg" name="request">
@@ -170,22 +206,6 @@ if (heartbeatPort.request().send()) {
       <packagedElement xmi:type="uml:Usage" xmi:id="_MMAiILCyEe-GfNfxoFH-hg" client="_MLousLCyEe-GfNfxoFH-hg" supplier="_ML7poLCyEe-GfNfxoFH-hg"/>
       <packagedElement xmi:type="uml:CallEvent" xmi:id="_2rOr0LCyEe-GfNfxoFH-hg" operation="_2rJMQLCyEe-GfNfxoFH-hg"/>
       <packagedElement xmi:type="uml:CallEvent" xmi:id="_4LnggLCyEe-GfNfxoFH-hg" operation="_4LbTQLCyEe-GfNfxoFH-hg"/>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Class" xmi:id="_iLUcoLCzEe-GfNfxoFH-hg" name="Top" isActive="true">
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_kfvWULCzEe-GfNfxoFH-hg" name="cSMS" visibility="protected" type="_qAXVALCtEe-GfNfxoFH-hg" isOrdered="true" aggregation="composite"/>
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_lrwdgLCzEe-GfNfxoFH-hg" name="chargingStation" visibility="protected" type="_sRGokLCtEe-GfNfxoFH-hg" isOrdered="true" aggregation="composite"/>
-      <ownedConnector xmi:type="uml:Connector" xmi:id="_BrwgYLC7Ee-2sqvv3BjQYQ" name="RTConnector1">
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_Br0x0LC7Ee-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_CcU-gLC3Ee-GfNfxoFH-hg"/>
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_Br1Y4LC7Ee-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_wscHQLC0Ee-GfNfxoFH-hg"/>
-      </ownedConnector>
-      <ownedConnector xmi:type="uml:Connector" xmi:id="_OkM30LDOEe-2sqvv3BjQYQ" name="RTConnector2">
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_OkPUELDOEe-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_08zPkLC8Ee-2sqvv3BjQYQ"/>
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_OkP7ILDOEe-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_4Ax98LC8Ee-2sqvv3BjQYQ"/>
-      </ownedConnector>
-      <ownedConnector xmi:type="uml:Connector" xmi:id="_PMPIMLDOEe-2sqvv3BjQYQ" name="RTConnector3">
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_PMQWULDOEe-2sqvv3BjQYQ" partWithPort="_kfvWULCzEe-GfNfxoFH-hg" role="_5f4JcLDNEe-2sqvv3BjQYQ"/>
-        <end xmi:type="uml:ConnectorEnd" xmi:id="_PMQWUbDOEe-2sqvv3BjQYQ" partWithPort="_lrwdgLCzEe-GfNfxoFH-hg" role="_7WLjwLDNEe-2sqvv3BjQYQ"/>
-      </ownedConnector>
     </packagedElement>
     <packagedElement xmi:type="uml:Package" xmi:id="_iRQWcLC8Ee-2sqvv3BjQYQ" name="StatusNotification">
       <packagedElement xmi:type="uml:Collaboration" xmi:id="_iRHMgLC8Ee-2sqvv3BjQYQ" name="StatusNotification">
@@ -222,6 +242,11 @@ if (heartbeatPort.request().send()) {
       <packagedElement xmi:type="uml:Usage" xmi:id="_zQoY8LDNEe-2sqvv3BjQYQ" client="_zQRMkLDNEe-2sqvv3BjQYQ" supplier="_zQl8sbDNEe-2sqvv3BjQYQ"/>
       <packagedElement xmi:type="uml:CallEvent" xmi:id="_1WLJILDNEe-2sqvv3BjQYQ" operation="_1WIF0LDNEe-2sqvv3BjQYQ"/>
       <packagedElement xmi:type="uml:CallEvent" xmi:id="_2E7skLDNEe-2sqvv3BjQYQ" operation="_2E53YLDNEe-2sqvv3BjQYQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Enumeration" xmi:id="_ShyWoLDtEe-Sera3s5tdng" name="Status">
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_YyvXULDtEe-Sera3s5tdng" name="Accepted"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_76e1wLDwEe-9M8IF0dWpAQ" name="Pending"/>
+      <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_8e-p8LDwEe-9M8IF0dWpAQ" name="Rejected"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_M0vIU7CtEe-GfNfxoFH-hg">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_M0vIVLCtEe-GfNfxoFH-hg" source="http://www.eclipse.org/uml2/2.0.0/UML">
