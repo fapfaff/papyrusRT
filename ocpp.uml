@@ -73,15 +73,16 @@ if(statusNotificationPort.response().send()) {
           <transition xmi:type="uml:Transition" xmi:id="_jnRpALDOEe-2sqvv3BjQYQ" name="receivedHeartbeat" kind="external" source="_iVruALC9Ee-2sqvv3BjQYQ" target="_iVruALC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_zmL8wLDOEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>//log.log(&quot;[CSMS] Received HeartbeatRequest.&quot;);
-
-if(heartbeatPort.response().send()) {
-//	log.log(&quot;[CSMS] Sent HeartbeatResponse&quot;);
-} else {
-//	log.log(&quot;[CSMS] Failed to send HeartbeatResponse&quot;);
-}</body>
+              <body>    log.log(&quot;[CSMS] Received HeartbeatRequest.&quot;);
+    int currentTime = time(NULL);
+    if(heartbeatPort.response(currentTime).send()) {
+    //	log.log(&quot;[CSMS] Sent HeartbeatResponse&quot;);
+    } else {
+    log.log(&quot;[CSMS] Failed to send HeartbeatResponse&quot;);
+    }
+</body>
             </effect>
-            <trigger xmi:type="uml:Trigger" xmi:id="_vkQ_cLDOEe-2sqvv3BjQYQ" event="_1WLJILDNEe-2sqvv3BjQYQ" port="_5f4JcLDNEe-2sqvv3BjQYQ"/>
+            <trigger xmi:type="uml:Trigger" xmi:id="_tW8-ELD0Ee-Tr6Cb3RcfOQ" event="_1WLJILDNEe-2sqvv3BjQYQ" port="_5f4JcLDNEe-2sqvv3BjQYQ"/>
           </transition>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_FGM44LC5Ee-2sqvv3BjQYQ" kind="initial"/>
           <subvertex xmi:type="uml:State" xmi:id="_FGwSgLC5Ee-2sqvv3BjQYQ" name="WaitingForBootNotification"/>
@@ -104,6 +105,9 @@ if(heartbeatPort.response().send()) {
       <ownedAttribute xmi:type="uml:Property" xmi:id="_ajQ88LDxEe-9M8IF0dWpAQ" name="heartbeatInterval">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
         <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_ajQ88bDxEe-9M8IF0dWpAQ" value="1000"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:type="uml:Port" xmi:id="_NmuQkLFKEe-qPZYaSXoNPQ" name="timer" visibility="protected" isOrdered="true" aggregation="composite" isBehavior="true" isService="false">
+        <type xmi:type="uml:Collaboration" href="pathmap://UMLRTRTSLIB/UMLRT-RTS.uml#_MxQZgGXsEeS_4daqvwyFrg"/>
       </ownedAttribute>
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_RKe5MLCwEe-GfNfxoFH-hg" name="StateMachine" isReentrant="false">
         <region xmi:type="uml:Region" xmi:id="_RKoqMLCwEe-GfNfxoFH-hg" name="Region">
@@ -156,18 +160,28 @@ if (heartbeatPort.request().send()) {
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_MhK40LC9Ee-2sqvv3BjQYQ" event="_oj1u0LC8Ee-2sqvv3BjQYQ" port="_4Ax98LC8Ee-2sqvv3BjQYQ"/>
           </transition>
-          <transition xmi:type="uml:Transition" xmi:id="_1jHX8LDYEe-2sqvv3BjQYQ" name="sendHeartbeat" kind="external" source="_FQNMoLC9Ee-2sqvv3BjQYQ" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
+          <transition xmi:type="uml:Transition" xmi:id="_1jHX8LDYEe-2sqvv3BjQYQ" name="receiveHeartbeat" kind="external" source="_FQNMoLC9Ee-2sqvv3BjQYQ" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_7KIq0LDYEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
-              <body>//log.log(&quot;[STAT] Received HeartbeatResponse&quot;);
-if (heartbeatPort.request().send()) {
-//    log.log(&quot;[STAT] Sent HeartBeat&quot;);
-} else {
-//    log.log(&quot;[STAT] Error sending Heartbeat&quot;);
-}
+              <body>    log.log(&quot;[STAT] Received HeartbeatResponse at %d&quot;, currentTime);
+    timer.informIn(UMLRTTimespec(10, heartbeatInterval));
 </body>
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_eL5SgLDbEe-i6vTFlLE7Wg" event="_2E7skLDNEe-2sqvv3BjQYQ" port="_7WLjwLDNEe-2sqvv3BjQYQ"/>
+          </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_SEK20LFLEe-qPZYaSXoNPQ" name="sendHeartbeat" kind="external" source="_FQNMoLC9Ee-2sqvv3BjQYQ" target="_FQNMoLC9Ee-2sqvv3BjQYQ">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_c5CuoLFLEe-qPZYaSXoNPQ" name="Effect" isReentrant="false">
+              <language>C++</language>
+              <body>    if (heartbeatPort.request().send()) {
+    //    log.log(&quot;[STAT] Sent HeartBeat&quot;);
+    } else {
+    //    log.log(&quot;[STAT] Error sending Heartbeat&quot;);
+    }
+</body>
+            </effect>
+            <trigger xmi:type="uml:Trigger" xmi:id="_i4WlsLFLEe-qPZYaSXoNPQ" port="_NmuQkLFKEe-qPZYaSXoNPQ">
+              <event xmi:type="uml:CallEvent" href="pathmap://UMLRTRTSLIB/UMLRT-RTS.uml#_IaEO8HDxEeSwWKwNKw1iAA"/>
+            </trigger>
           </transition>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_RKsUkLCwEe-GfNfxoFH-hg" kind="initial"/>
           <subvertex xmi:type="uml:State" xmi:id="_RKx0ILCwEe-GfNfxoFH-hg" name="Booting"/>
@@ -235,7 +249,11 @@ if (heartbeatPort.request().send()) {
         <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_zQnx4LDNEe-2sqvv3BjQYQ" client="_zQRMkLDNEe-2sqvv3BjQYQ" supplier="_zQl8sbDNEe-2sqvv3BjQYQ" contract="_zQl8sbDNEe-2sqvv3BjQYQ"/>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_zQU28LDNEe-2sqvv3BjQYQ" name="Heartbeat">
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_2E53YLDNEe-2sqvv3BjQYQ" name="response"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_2E53YLDNEe-2sqvv3BjQYQ" name="response">
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_FfUhsLD0Ee-Tr6Cb3RcfOQ" name="currentTime">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+          </ownedParameter>
+        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Interface" xmi:id="_zQi5YLDNEe-2sqvv3BjQYQ" name="Heartbeat~">
         <ownedOperation xmi:type="uml:Operation" xmi:id="_1WIF0LDNEe-2sqvv3BjQYQ" name="request"/>
@@ -320,4 +338,5 @@ if (heartbeatPort.request().send()) {
   <UMLRealTime:RTPort xmi:id="_7WNY8LDNEe-2sqvv3BjQYQ" isPublish="false" isWired="true" base_Port="_7WLjwLDNEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTConnector xmi:id="_OkQiMLDOEe-2sqvv3BjQYQ" base_Connector="_OkM30LDOEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTConnector xmi:id="_PMQWUrDOEe-2sqvv3BjQYQ" base_Connector="_PMPIMLDOEe-2sqvv3BjQYQ"/>
+  <UMLRealTime:RTPort xmi:id="_No6o8LFKEe-qPZYaSXoNPQ" isPublish="false" isWired="false" base_Port="_NmuQkLFKEe-qPZYaSXoNPQ"/>
 </xmi:XMI>
