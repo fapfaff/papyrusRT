@@ -30,15 +30,13 @@
       <ownedAttribute xmi:type="uml:Port" xmi:id="_CcU-gLC3Ee-GfNfxoFH-hg" name="bootNotificationPort" visibility="public" type="_MLousLCyEe-GfNfxoFH-hg" isOrdered="true" aggregation="composite" isBehavior="true" isConjugated="true" isService="true"/>
       <ownedAttribute xmi:type="uml:Port" xmi:id="_08zPkLC8Ee-2sqvv3BjQYQ" name="statusNotificationPort" visibility="public" type="_iRHMgLC8Ee-2sqvv3BjQYQ" isOrdered="true" aggregation="composite" isBehavior="true" isConjugated="true" isService="true"/>
       <ownedAttribute xmi:type="uml:Port" xmi:id="_5f4JcLDNEe-2sqvv3BjQYQ" name="heartbeatPort" visibility="public" type="_zQRMkLDNEe-2sqvv3BjQYQ" isOrdered="true" aggregation="composite" isBehavior="true" isConjugated="true" isService="true"/>
+      <ownedAttribute xmi:type="uml:Port" xmi:id="_wt_N4LFNEe-p4rHJqx5Fiw" name="timer" visibility="protected" isOrdered="true" aggregation="composite" isBehavior="true" isService="false">
+        <type xmi:type="uml:Collaboration" href="pathmap://UMLRTRTSLIB/UMLRT-RTS.uml#_MxQZgGXsEeS_4daqvwyFrg"/>
+      </ownedAttribute>
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_FFGssLC5Ee-2sqvv3BjQYQ" name="StateMachine" isReentrant="false">
         <region xmi:type="uml:Region" xmi:id="_FGEWALC5Ee-2sqvv3BjQYQ" name="Region">
-          <transition xmi:type="uml:Transition" xmi:id="_FG1LALC5Ee-2sqvv3BjQYQ" name="Initial" source="_FGM44LC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
-            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_9hLLwLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
-              <language>C++</language>
-              <body>log.log(&quot;[CSMS] Waiting for boot notifications...&quot;);</body>
-            </effect>
-          </transition>
-          <transition xmi:type="uml:Transition" xmi:id="_S8LKMLC5Ee-2sqvv3BjQYQ" name="notified" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_QzzIcLC5Ee-2sqvv3BjQYQ">
+          <transition xmi:type="uml:Transition" xmi:id="_FG1LALC5Ee-2sqvv3BjQYQ" name="Initial" source="_FGM44LC5Ee-2sqvv3BjQYQ" target="_sT7dYLFNEe-p4rHJqx5Fiw"/>
+          <transition xmi:type="uml:Transition" xmi:id="_S8LKMLC5Ee-2sqvv3BjQYQ" name="bootNotification" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_eTeZoLC5Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
               <body>log.log(&quot;[CSMS] Recieved BootNotification from station %s with reason %s&quot;, station, reason);
@@ -51,9 +49,9 @@ if(bootNotificationPort.response(Accepted, currentTime, 1000).send()) {
 	log.log(&quot;[CSMS] Failed to send BootNotificationResponse&quot;);
 }</body>
             </effect>
-            <trigger xmi:type="uml:Trigger" xmi:id="_X-OHwLC5Ee-2sqvv3BjQYQ" event="_4LnggLCyEe-GfNfxoFH-hg" port="_CcU-gLC3Ee-GfNfxoFH-hg"/>
+            <trigger xmi:type="uml:Trigger" xmi:id="_X-OHwLC5Ee-2sqvv3BjQYQ" name="bootNotificationRequest" event="_4LnggLCyEe-GfNfxoFH-hg" port="_CcU-gLC3Ee-GfNfxoFH-hg"/>
           </transition>
-          <transition xmi:type="uml:Transition" xmi:id="_k0FqILC9Ee-2sqvv3BjQYQ" name="ready" kind="external" source="_QzzIcLC5Ee-2sqvv3BjQYQ" target="_iVruALC9Ee-2sqvv3BjQYQ">
+          <transition xmi:type="uml:Transition" xmi:id="_k0FqILC9Ee-2sqvv3BjQYQ" name="statusNotification" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_rbbKgLC9Ee-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
               <body>if (connectorStatus == Available) {
@@ -70,7 +68,7 @@ if(statusNotificationPort.response().send()) {
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_msWzULC9Ee-2sqvv3BjQYQ" event="_nKTwELC8Ee-2sqvv3BjQYQ" port="_08zPkLC8Ee-2sqvv3BjQYQ"/>
           </transition>
-          <transition xmi:type="uml:Transition" xmi:id="_jnRpALDOEe-2sqvv3BjQYQ" name="receivedHeartbeat" kind="external" source="_iVruALC9Ee-2sqvv3BjQYQ" target="_iVruALC9Ee-2sqvv3BjQYQ">
+          <transition xmi:type="uml:Transition" xmi:id="_jnRpALDOEe-2sqvv3BjQYQ" name="heartbeat" kind="external" source="_FGwSgLC5Ee-2sqvv3BjQYQ" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_zmL8wLDOEe-2sqvv3BjQYQ" name="Effect" isReentrant="false">
               <language>C++</language>
               <body>    log.log(&quot;[CSMS] Received HeartbeatRequest.&quot;);
@@ -84,10 +82,39 @@ if(statusNotificationPort.response().send()) {
             </effect>
             <trigger xmi:type="uml:Trigger" xmi:id="_tW8-ELD0Ee-Tr6Cb3RcfOQ" event="_1WLJILDNEe-2sqvv3BjQYQ" port="_5f4JcLDNEe-2sqvv3BjQYQ"/>
           </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_2FL8ELFNEe-p4rHJqx5Fiw" name="bootNotificationRequest" kind="external" source="_sT7dYLFNEe-p4rHJqx5Fiw" target="_sT7dYLFNEe-p4rHJqx5Fiw">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_FUBdwLFOEe-p4rHJqx5Fiw" name="Effect" isReentrant="false">
+              <language>C++</language>
+              <body>log.log(&quot;[CSMS] Received BootNotification from station %s with reason %s&quot;, station, reason);
+
+int currentTime = time(NULL);
+
+if(bootNotificationPort.response(Pending, currentTime, 1000).send()) {
+	log.log(&quot;[CSMS] Answered BootNotification with Pending&quot;);
+} else {
+	log.log(&quot;[CSMS] Failed to send BootNotificationResponse&quot;);
+}</body>
+            </effect>
+            <trigger xmi:type="uml:Trigger" xmi:id="_7kCKYLFNEe-p4rHJqx5Fiw" event="_4LnggLCyEe-GfNfxoFH-hg" port="_CcU-gLC3Ee-GfNfxoFH-hg"/>
+          </transition>
+          <transition xmi:type="uml:Transition" xmi:id="__IhvYLFOEe-p4rHJqx5Fiw" name="booted" kind="external" source="_sT7dYLFNEe-p4rHJqx5Fiw" target="_FGwSgLC5Ee-2sqvv3BjQYQ">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_6mXWULFPEe-p4rHJqx5Fiw" name="Effect" isReentrant="false">
+              <language>C++</language>
+              <body>log.log(&quot;[STAT] Finished booting. Waiting for requests...&quot;);</body>
+            </effect>
+            <trigger xmi:type="uml:Trigger" xmi:id="_EJg9ALFPEe-p4rHJqx5Fiw" port="_wt_N4LFNEe-p4rHJqx5Fiw">
+              <event xmi:type="uml:CallEvent" href="pathmap://UMLRTRTSLIB/UMLRT-RTS.uml#_IaEO8HDxEeSwWKwNKw1iAA"/>
+            </trigger>
+          </transition>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_FGM44LC5Ee-2sqvv3BjQYQ" kind="initial"/>
-          <subvertex xmi:type="uml:State" xmi:id="_FGwSgLC5Ee-2sqvv3BjQYQ" name="WaitingForBootNotification"/>
-          <subvertex xmi:type="uml:State" xmi:id="_QzzIcLC5Ee-2sqvv3BjQYQ" name="WaitingForStatusNotification"/>
-          <subvertex xmi:type="uml:State" xmi:id="_iVruALC9Ee-2sqvv3BjQYQ" name="Operating"/>
+          <subvertex xmi:type="uml:State" xmi:id="_FGwSgLC5Ee-2sqvv3BjQYQ" name="Operating"/>
+          <subvertex xmi:type="uml:State" xmi:id="_sT7dYLFNEe-p4rHJqx5Fiw" name="Booting">
+            <entry xmi:type="uml:FunctionBehavior" xmi:id="_ckSfQLFOEe-p4rHJqx5Fiw" name="startTimer">
+              <language>C++</language>
+              <body>log.log(&quot;[CSMS] Starting to boot...&quot;);
+timer.informIn(UMLRTTimespec(20000, 0));</body>
+            </entry>
+          </subvertex>
         </region>
       </ownedBehavior>
     </packagedElement>
@@ -318,7 +345,6 @@ if (heartbeatPort.request().send()) {
   <UMLRTStateMachines:RTState xmi:id="_FGz84LC5Ee-2sqvv3BjQYQ" base_State="_FGwSgLC5Ee-2sqvv3BjQYQ"/>
   <UMLRTStateMachines:RTRegion xmi:id="_FG2ZILC5Ee-2sqvv3BjQYQ" base_Region="_FGEWALC5Ee-2sqvv3BjQYQ"/>
   <UMLRTStateMachines:RTStateMachine xmi:id="_FHRP4LC5Ee-2sqvv3BjQYQ" base_StateMachine="_FFGssLC5Ee-2sqvv3BjQYQ"/>
-  <UMLRTStateMachines:RTState xmi:id="_Qz8SYLC5Ee-2sqvv3BjQYQ" base_State="_QzzIcLC5Ee-2sqvv3BjQYQ"/>
   <UMLRealTime:RTConnector xmi:id="_Br1Y4bC7Ee-2sqvv3BjQYQ" base_Connector="_BrwgYLC7Ee-2sqvv3BjQYQ"/>
   <UMLRealTime:ProtocolContainer xmi:id="_iRUn4LC8Ee-2sqvv3BjQYQ" base_Package="_iRQWcLC8Ee-2sqvv3BjQYQ"/>
   <UMLRealTime:RTMessageSet xmi:id="_iRZgYLC8Ee-2sqvv3BjQYQ" base_Interface="_iRWdELC8Ee-2sqvv3BjQYQ"/>
@@ -328,7 +354,6 @@ if (heartbeatPort.request().send()) {
   <UMLRealTime:RTPort xmi:id="_08-OsLC8Ee-2sqvv3BjQYQ" isPublish="false" isWired="true" base_Port="_08zPkLC8Ee-2sqvv3BjQYQ"/>
   <UMLRealTime:RTPort xmi:id="_4A1BQLC8Ee-2sqvv3BjQYQ" isPublish="false" isWired="true" base_Port="_4Ax98LC8Ee-2sqvv3BjQYQ"/>
   <UMLRTStateMachines:RTState xmi:id="_FQOawLC9Ee-2sqvv3BjQYQ" base_State="_FQNMoLC9Ee-2sqvv3BjQYQ"/>
-  <UMLRTStateMachines:RTState xmi:id="_iVtjMLC9Ee-2sqvv3BjQYQ" base_State="_iVruALC9Ee-2sqvv3BjQYQ"/>
   <UMLRealTime:ProtocolContainer xmi:id="_zQTo0LDNEe-2sqvv3BjQYQ" base_Package="_zQTBwLDNEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTMessageSet xmi:id="_zQZIYLDNEe-2sqvv3BjQYQ" base_Interface="_zQU28LDNEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTMessageSet xmi:id="_zQkHgLDNEe-2sqvv3BjQYQ" base_Interface="_zQi5YLDNEe-2sqvv3BjQYQ" rtMsgKind="out"/>
@@ -339,4 +364,6 @@ if (heartbeatPort.request().send()) {
   <UMLRealTime:RTConnector xmi:id="_OkQiMLDOEe-2sqvv3BjQYQ" base_Connector="_OkM30LDOEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTConnector xmi:id="_PMQWUrDOEe-2sqvv3BjQYQ" base_Connector="_PMPIMLDOEe-2sqvv3BjQYQ"/>
   <UMLRealTime:RTPort xmi:id="_No6o8LFKEe-qPZYaSXoNPQ" isPublish="false" isWired="false" base_Port="_NmuQkLFKEe-qPZYaSXoNPQ"/>
+  <UMLRTStateMachines:RTState xmi:id="_sV-r0LFNEe-p4rHJqx5Fiw" base_State="_sT7dYLFNEe-p4rHJqx5Fiw"/>
+  <UMLRealTime:RTPort xmi:id="_wuTW8LFNEe-p4rHJqx5Fiw" isPublish="false" isWired="false" base_Port="_wt_N4LFNEe-p4rHJqx5Fiw"/>
 </xmi:XMI>
